@@ -40,3 +40,17 @@ MySQL  localhost:33060+ ssl  payroll_service  SQL > SELECT * FROM employee_payro
 |  3 | Charlie | 780000 | 2018-01-16 |
 +----+---------+--------+------------+
 3 rows in set (0.0014 sec)
+
+MySQL  localhost:33060+ ssl  payroll_service  SQL > UPDATE employee_Payroll SET salary = 3000000.00 WHERE name = 'Terissa';
+Query OK, 1 row affected (0.0228 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+MySQL  localhost:33060+ ssl  payroll_service  SQL > SELECT * FROM employee_payroll;
++----+---------+---------+------------+
+| id | name    | salary  | start      |
++----+---------+---------+------------+
+|  1 | Bill    |  650000 | 2020-12-30 |
+|  2 | Terissa | 3000000 | 2021-09-20 |
+|  3 | Charlie |  780000 | 2018-01-16 |
++----+---------+---------+------------+
+3 rows in set (0.0042 sec)

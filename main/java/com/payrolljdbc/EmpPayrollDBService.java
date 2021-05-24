@@ -35,4 +35,38 @@ public class EmpPayrollDBService {
         }
         return empPayrollDataList;
     }
+
+    public List<EmpPayrollData> getEmpPayrollData(String name) throws ExceptionDB {
+        List<EmpPayrollData> empPayrollDataList = new ArrayList<>();
+        String sql = String.format("SELECT * FROM employee_payroll WHERE name='%s'",name);
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String empName = resultSet.getString("name");
+                double salary = resultSet.getDouble("salary");
+                LocalDate start = resultSet.getDate("start").toLocalDate();
+                empPayrollDataList.add(new EmpPayrollData(id,empName,salary,start));
+            }
+        } catch (SQLException throwable) {
+            throw new ExceptionDB("Cannot establish Connection", ExceptionDB.ExceptionType.CONNECTION_FAILURE);
+        }
+        return empPayrollDataList;
+    }
+
+    public int updateEmpData(String name, double salary) {
+        return this.updateEmpDataUsingStatement(name, salary);
+    }
+
+    private int updateEmpDataUsingStatement(String name, double salary) {
+        String sql = String.format(" UPDATE employee_Payroll SET salary = %.2f WHERE name = '%s';", salary, name);
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            return statement.executeUpdate(sql);
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return 0;
+    }
 }
