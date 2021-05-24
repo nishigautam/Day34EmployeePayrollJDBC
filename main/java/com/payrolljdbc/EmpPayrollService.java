@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class EmpPayrollService {
+
     public enum IOService {
         CONSOLE_IO, FILE_IO, DB_IO, REST_IO
     }
@@ -53,6 +54,10 @@ public class EmpPayrollService {
     public boolean checkEmployeePayrollInSyncWithDB(String name) throws ExceptionDB {
         List<EmpPayrollData> empPayrollDataList = new EmpPayrollDBService().getEmpPayrollData(name);
         return empPayrollDataList.get(0).equals(getEmpPayrollData(name));
+    }
+
+    public List<EmpPayrollData> readEmployeeDataWithGivenDateRange(IOService dbIo, LocalDate start, LocalDate endDate) {
+        return null;
     }
 
     public void readEmployeeData(IOService ioType) {

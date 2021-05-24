@@ -4,8 +4,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.payrolljdbc.EmpPayrollService.IOService.DB_IO;
 
 public class EmpPayrollTesting {
 
@@ -34,9 +37,19 @@ public class EmpPayrollTesting {
     @Test
     public void givenNewSalaryForEmployee_ShouldMatchWhenUpdated() throws ExceptionDB {
         EmpPayrollService empPayrollService = new EmpPayrollService();
-        List<EmpPayrollData> empPayrollDataList = empPayrollService.readEmployeePayrollData(EmpPayrollService.IOService.DB_IO);
+        List<EmpPayrollData> empPayrollDataList = empPayrollService.readEmployeePayrollData(DB_IO);
         empPayrollService.updateEmpSalary("Terrisa", 3000000.00);
         boolean result = empPayrollService.checkEmployeePayrollInSyncWithDB("Terrisa");
         Assertions.assertTrue(result);
+    }
+
+    @Test
+    public void givenDataRange_WhenRetrieved_ShouldMatchEmployeeCount() throws ExceptionDB {
+        EmpPayrollService empPayrollService = new EmpPayrollService();
+        empPayrollService.readEmployeePayrollData(DB_IO);
+        LocalDate start = LocalDate.of(2018,01,01);
+        LocalDate endDate = LocalDate.now();
+        List<EmpPayrollData> empPayrollDataList = empPayrollService.readEmployeeDataWithGivenDateRange(DB_IO, start,endDate);
+        Assertions.assertEquals(3,empPayrollDataList.size());
     }
 }
