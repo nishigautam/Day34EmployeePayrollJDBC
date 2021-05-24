@@ -31,6 +31,30 @@ public class EmpPayrollService {
         return this.empPayrollDataList;
     }
 
+    public void updateEmpSalary(String name, double salary) {
+        int result = new EmpPayrollDBService().updateEmpData(name,salary);
+        if (result == 0) {
+            try {
+                throw new SQLFailedException("Query is failed.");
+            } catch (SQLFailedException e) {
+                e.printStackTrace();
+            }
+        }
+        EmpPayrollData empPayrollData = this.getEmpPayrollData(name);
+        if (empPayrollDataList != null)
+            empPayrollData.salary = salary;
+    }
+
+    private EmpPayrollData getEmpPayrollData(String name) {
+        return this.empPayrollDataList.stream().filter(empPayrollDataItem -> empPayrollDataItem.name.equals(name))
+                .findFirst().orElse(null);
+    }
+
+    public boolean checkEmployeePayrollInSyncWithDB(String name) throws ExceptionDB {
+        List<EmpPayrollData> empPayrollDataList = new EmpPayrollDBService().getEmpPayrollData(name);
+        return empPayrollDataList.get(0).equals(getEmpPayrollData(name));
+    }
+
     public void readEmployeeData(IOService ioType) {
         if(ioType.equals(IOService.CONSOLE_IO)) {
             System.out.println("Enter Employee ID:");
