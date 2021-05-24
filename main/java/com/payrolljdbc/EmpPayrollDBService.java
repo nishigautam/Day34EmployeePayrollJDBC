@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmpPayrollDBService {
+    private static EmpPayrollDBService empPayrollDBService;
+    private PreparedStatement employeePayrollDataStatement;
 
     private Connection getConnection() throws SQLException {
         String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service";
@@ -53,6 +55,16 @@ public class EmpPayrollDBService {
             throw new ExceptionDB("Cannot establish Connection", ExceptionDB.ExceptionType.CONNECTION_FAILURE);
         }
         return empPayrollDataList;
+    }
+
+    private void prepareStatementEmployeeData() {
+        try {
+            Connection connection = this.getConnection();
+            String sql = "SELECT * FROM employee_payroll where name=?";
+            employeePayrollDataStatement = connection.prepareStatement(sql);
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public int updateEmpData(String name, double salary) {
